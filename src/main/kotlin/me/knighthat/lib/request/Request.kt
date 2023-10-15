@@ -8,8 +8,8 @@ import me.knighthat.lib.json.JsonSerializable
 import java.util.*
 
 open class Request(
-        val type: RequestType,
-        val payload: JsonElement
+    val type: RequestType,
+    val payload: JsonElement
 ) : JsonSerializable {
 
     companion object {
@@ -32,9 +32,14 @@ open class Request(
 
             var uuid: UUID? = null
             var target: TargetedRequest.Target? = null
-            if (type == RequestType.ADD
-                    || type == RequestType.REMOVE
-                    || type == RequestType.UPDATE) {
+            if (type == RequestType.ADD ||
+                type == RequestType.REMOVE ||
+                type == RequestType.UPDATE
+            ) {
+                if (!json.has("uuid"))
+                    throw RequestException("missing uuid!")
+                if (!json.has("target"))
+                    throw RequestException("missing target!")
 
                 if (json["uuid"] != JsonNull.INSTANCE) {
                     val uuidStr = json["uuid"].asString
