@@ -51,10 +51,10 @@ open class Request(
             }
 
             return when (type) {
-                RequestType.ADD, RequestType.REMOVE, RequestType.UPDATE ->
-                    TargetedRequest(type, content, uuid, target!!)
-
-                else -> Request(type, content)
+                RequestType.ADD    -> AddRequest(content, uuid, target!!)
+                RequestType.REMOVE -> RemoveRequest(content, uuid, target!!)
+                RequestType.UPDATE -> UpdateRequest(content, uuid, target!!)
+                else               -> Request(type, content)
             }
         }
     }
