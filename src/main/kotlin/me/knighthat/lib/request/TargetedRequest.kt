@@ -7,18 +7,18 @@ import com.google.gson.JsonPrimitive
 import java.util.*
 
 open class TargetedRequest(
-        type: RequestType,
-        payload: JsonElement,
-        val uuid: UUID?,
-        val target: Target
+    type: RequestType,
+    payload: JsonElement,
+    val uuid: UUID?,
+    val target: Target
 ) : Request(type, payload) {
 
     override fun serialize(): JsonObject {
         val uuid =
-                if (this.uuid == null)
-                    JsonNull.INSTANCE
-                else
-                    JsonPrimitive(this.uuid.toString())
+            if (this.uuid == null)
+                JsonNull.INSTANCE
+            else
+                JsonPrimitive(this.uuid.toString())
 
         val json = super.serialize()
         json.addProperty("target", target.name)
