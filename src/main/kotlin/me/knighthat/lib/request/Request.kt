@@ -3,8 +3,11 @@ package me.knighthat.lib.request
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
+import me.knighthat.lib.connection.Connection
+import me.knighthat.lib.connection.wireless.WirelessSender
 import me.knighthat.lib.exception.RequestException
 import me.knighthat.lib.json.JsonSerializable
+import me.knighthat.lib.logging.Log
 import java.util.*
 
 open class Request(
@@ -57,6 +60,15 @@ open class Request(
                 else               -> Request(type, content)
             }
         }
+    }
+
+    init {
+        Log.deb("Request to ${type.name} is created!")
+    }
+
+    fun send() {
+        if (Connection.isConnected())
+            WirelessSender.send(this)
     }
 
     override fun serialize(): JsonObject {
