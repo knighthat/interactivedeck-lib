@@ -1,42 +1,36 @@
-package me.knighthat.lib.request
+package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
-import me.knighthat.lib.json.Json
 import me.knighthat.lib.json.JsonArrayConverter
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class AddRequestTest {
+class RemoveRequestTest {
 
-    companion object {
+    private val uuids = ArrayList<UUID>(20)
 
-        private var uuids = ArrayList<UUID>(20)
-
-        @JvmStatic
-        @BeforeAll
-        fun setUp() {
-            for (i in 0 ..< 20)
-                uuids.add(UUID.randomUUID())
-        }
+    @BeforeEach
+    fun setUp() {
+        for (i in 0 until uuids.size)
+            uuids[i] = UUID.randomUUID()
     }
 
     @Test
     fun profileConstructorTest() {
-        val request = AddRequest {
+        val request = RemoveRequest {
             for (id in uuids)
                 it.add(id.toString())
         }
 
-        val uuidStrArray = uuids.map(UUID::toString).toTypedArray()
-        val uuidArray = JsonArrayConverter.fromStringArray(uuidStrArray)
+        val uuidArray = uuids.map(UUID::toString).toTypedArray()
         val expected = JsonObject()
-        expected.addProperty("type", Request.RequestType.ADD.name)
+        expected.addProperty("type", Request.RequestType.REMOVE.name)
         expected.add("uuid", JsonNull.INSTANCE)
-        expected.add("content", Json.gzipCompress(uuidArray))
+        expected.add("content", JsonArrayConverter.fromStringArray(uuidArray))
         expected.addProperty("target", TargetedRequest.Target.PROFILE.name)
 
         Assertions.assertEquals(expected, request.serialize())
@@ -50,14 +44,13 @@ class AddRequestTest {
         for (id in uuids)
             idArray.add(id.toString())
 
-        val request = AddRequest(pId, idArray)
+        val request = RemoveRequest(pId, idArray)
 
-        val uuidStrArray = uuids.map(UUID::toString).toTypedArray()
-        val uuidArray = JsonArrayConverter.fromStringArray(uuidStrArray)
+        val uuidArray = uuids.map(UUID::toString).toTypedArray()
         val expected = JsonObject()
-        expected.addProperty("type", Request.RequestType.ADD.name)
+        expected.addProperty("type", Request.RequestType.REMOVE.name)
         expected.addProperty("uuid", pId.toString())
-        expected.add("content", Json.gzipCompress(uuidArray))
+        expected.add("content", JsonArrayConverter.fromStringArray(uuidArray))
         expected.addProperty("target", TargetedRequest.Target.BUTTON.name)
 
         Assertions.assertEquals(expected, request.serialize())

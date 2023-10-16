@@ -1,4 +1,4 @@
-package me.knighthat.lib.request
+package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
