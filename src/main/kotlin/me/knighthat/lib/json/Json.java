@@ -26,11 +26,7 @@ public class Json {
         String jsonString = GSON.toJson( json );
         byte[] compressedBytes = GZipAlgo.compress( jsonString.getBytes() );
 
-        JsonArray array = new JsonArray( compressedBytes.length );
-        for (byte b : compressedBytes)
-            array.add( b );
-
-        return array;
+        return JsonArrayConverter.fromByteArray( compressedBytes );
     }
 
     public static @NotNull JsonElement gzipDecompress( @NotNull JsonArray deflated ) throws IOException {

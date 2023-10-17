@@ -25,6 +25,17 @@ public class JsonArrayConverter {
         return jsonArray;
     }
 
+    public static @NotNull JsonArray fromByteArray( byte[] bytes ) {
+        if (bytes == null || bytes.length == 0)
+            return new JsonArray( 0 );
+
+        JsonArray jsonArray = new JsonArray( bytes.length );
+        for (byte b : bytes)
+            jsonArray.add( b );
+
+        return jsonArray;
+    }
+
     /**
      * Turn every element of {@link JsonArray} into byte despite the actual element's type
      *
