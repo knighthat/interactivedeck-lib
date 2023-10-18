@@ -2,6 +2,7 @@ package me.knighthat.lib.json;
 
 import com.google.gson.*;
 import me.knighthat.lib.compress.GZipAlgo;
+import me.knighthat.lib.logging.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -35,7 +36,9 @@ public class Json {
 
         byte[] deflatedBytes = JsonArrayConverter.toByteArray( deflated );
         byte[] inflatedBytes = GZipAlgo.decompress( deflatedBytes );
+
         String inflated = new String( inflatedBytes );
+        Log.deb( "Inflated string: " + inflated );
 
         return JsonParser.parseString( inflated );
     }
