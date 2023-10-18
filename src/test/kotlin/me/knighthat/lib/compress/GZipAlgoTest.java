@@ -22,7 +22,7 @@ class GZipAlgoTest {
             throw new RuntimeException( e );
         }
     }
-    
+
     private final byte[] compressedBytes = new byte[]{ 31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -19, 87, 91, 111, -37, 54, 20, 126, -49, -81, 16, -4, 28, 90, -30, 77, -105, -66, -91, -119, -117, 5,
             88, -38, 96, -51, -48, 21, -61, 96, 28, -34, 100, -94, -74, -24, 73, 84, 99, -81, -56, 127, 31, -27, -72, -82, -20, 36, 30, -30, 110, 89, -101, -51, 48, 108, 126, -121, -30, -27, -16, -5,
             -50, -31, -47, -89, -93, 40, 26, -76, -83, 85, -125, 23, -47, -96, 72, 82, 9, -86, 40, 80, -98, 51, -126, 24, 45, 50, 4, -62, 96, -92, -75, -108, 26, 48, 100, 60, 101, -125, -29, 110,
@@ -49,31 +49,19 @@ class GZipAlgoTest {
 
     @Test
     void isGZip() {
-        try {
-            byte[] compressedBytes = GZipAlgo.compress( toCompress.getBytes() );
-            Assertions.assertTrue( GZipAlgo.isGZip( compressedBytes ) );
-        } catch (IOException e) {
-            Assertions.fail( e.getMessage() );
-        }
+        byte[] compressedBytes = GZipAlgo.compress( toCompress.getBytes() );
+        Assertions.assertTrue( GZipAlgo.isGZip( compressedBytes ) );
     }
 
     @Test
     void compress() {
-        try {
-            byte[] compressedBytes = GZipAlgo.compress( toCompress.getBytes() );
-            Assertions.assertArrayEquals( this.compressedBytes, compressedBytes );
-        } catch (IOException e) {
-            Assertions.fail( e.getMessage() );
-        }
+        byte[] compressedBytes = GZipAlgo.compress( toCompress.getBytes() );
+        Assertions.assertArrayEquals( this.compressedBytes, compressedBytes );
     }
 
     @Test
     void decompress() {
-        try {
-            byte[] inflated = GZipAlgo.decompress( compressedBytes );
-            Assertions.assertEquals( toCompress, new String( inflated ) );
-        } catch (IOException e) {
-            Assertions.fail( e.getMessage() );
-        }
+        byte[] inflated = GZipAlgo.decompress( compressedBytes );
+        Assertions.assertEquals( toCompress, new String( inflated ) );
     }
 }
