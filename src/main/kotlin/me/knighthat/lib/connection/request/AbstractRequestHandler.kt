@@ -12,7 +12,7 @@ abstract class AbstractRequestHandler {
 
     protected abstract fun handlePairRequest(request: Request)
 
-    protected abstract fun handleActionRequest(request: Request)
+    protected abstract fun handleActionRequest(request: ActionRequest)
 
     fun process(request: Request) {
         if (request is RequiredConnection && !Connection.isConnected())
@@ -24,7 +24,7 @@ abstract class AbstractRequestHandler {
             Request.RequestType.REMOVE -> handleRemoveRequest(request as RemoveRequest)
             Request.RequestType.UPDATE -> handleUpdateRequest(request as UpdateRequest)
             Request.RequestType.PAIR   -> handlePairRequest(request)
-            Request.RequestType.ACTION -> handleActionRequest(request)
+            Request.RequestType.ACTION -> handleActionRequest(request as ActionRequest)
         }
     }
 }

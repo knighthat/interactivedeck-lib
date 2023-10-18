@@ -4,6 +4,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import me.knighthat.lib.connection.Connection
+import me.knighthat.lib.connection.action.Action
 import me.knighthat.lib.connection.wireless.WirelessSender
 import me.knighthat.lib.exception.RequestException
 import me.knighthat.lib.json.JsonSerializable
@@ -57,6 +58,7 @@ open class Request(
                 RequestType.ADD    -> AddRequest(content, uuid, target!!)
                 RequestType.REMOVE -> RemoveRequest(content, uuid, target!!)
                 RequestType.UPDATE -> UpdateRequest(content, uuid, target!!)
+                RequestType.ACTION -> ActionRequest(Action.fromJson(content))
                 else               -> Request(type, content)
             }
         }
