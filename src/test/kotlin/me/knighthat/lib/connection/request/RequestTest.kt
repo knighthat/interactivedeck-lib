@@ -31,6 +31,7 @@ class RequestTest {
         Assertions.assertInstanceOf(AddRequest::class.java, perfBtnReq)
         Assertions.assertEquals((perfBtnReq!! as TargetedRequest).target, TargetedRequest.Target.BUTTON)
         Assertions.assertNotNull((perfBtnReq!! as TargetedRequest).uuid)
+        Assertions.assertFalse(Json.isGzip(perfBtnReq!!.payload))
 
         val payload = perfBtnReq!!.serialize().get("content")
         Assertions.assertTrue(Json.isGzip(payload))
