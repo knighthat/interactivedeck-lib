@@ -11,7 +11,7 @@ class AddRequest(
     payload: JsonElement,
     uuid: UUID?,
     target: Target
-) : TargetedRequest(RequestType.ADD, payload, uuid, target) {
+) : TargetedRequest(RequestType.ADD, JsonArray(), uuid, target) {
 
     constructor(uuid: UUID, payload: JsonArray) : this(JsonArray(), uuid, Target.BUTTON) {
         this.payload
