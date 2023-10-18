@@ -67,8 +67,9 @@ public class GZipAlgo {
          * Newly compressed bytes has 10 bytes of GZ header
          * that needs to be removed for accuracy.
          */
+        int deflNoHeader = deflatedBytes.length - 10;
         String deb = "Compressed: %s bytes to %s bytes";
-        Log.deb( deb.formatted( raw.length, deflatedBytes.length - 10 ) );
+        Log.deb( String.format( deb, raw.length, deflNoHeader ) );
 
         return deflatedBytes;
     }
@@ -106,8 +107,9 @@ public class GZipAlgo {
          * Uncompressed bytes has 10 bytes of GZ header
          * that needs to be removed for accuracy.
          */
-        String deb = "Inflated: %s bytes to %s bytes";
-        Log.deb( deb.formatted( deflatedBytes.length - 10, inflatedBytes.length ) );
+        int deflNoHeader = deflatedBytes.length - 10;
+        int inflLen = inflatedBytes.length;
+        Log.deb( String.format( "Inflated: %s bytes to %s bytes", deflNoHeader, inflLen ) );
 
         return inflatedBytes;
     }

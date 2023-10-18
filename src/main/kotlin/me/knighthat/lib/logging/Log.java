@@ -99,8 +99,7 @@ public class Log {
 
     public static void logUpdate( @NotNull String object, @NotNull String id, @NotNull String property, @NotNull Object from, @NotNull Object to ) {
         String info = "%s %s changed %s from \"%s\" to \"%s\"";
-        info = info.formatted( object, id, property, from, to );
-        info( info );
+        info( String.format( info, object, id, property, from, to ) );
     }
 
     public static void buttonUpdate( @NotNull UUID uuid, @NotNull String property, @NotNull Object from, @NotNull Object to ) {
