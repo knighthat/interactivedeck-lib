@@ -13,7 +13,7 @@ class AddRequest(
     target: Target
 ) : TargetedRequest(RequestType.ADD, JsonArray(), uuid, target) {
 
-    constructor(uuid: UUID, payload: JsonArray) : this(JsonArray(), uuid, Target.BUTTON) {
+    init {
         this.payload
             .asJsonArray
             .addAll(
@@ -21,18 +21,14 @@ class AddRequest(
                     val array = payload.asJsonArray
                     Json.gzipDecompress(array).asJsonArray
                 } else
-                    payload
+                    payload.asJsonArray
             )
     }
 
+    constructor(uuid: UUID, payload: JsonArray) : this(payload, uuid, Target.BUTTON)
+
     constructor(payload: Consumer<JsonArray>) : this(JsonArray(), null, Target.PROFILE) {
-        var content = JsonArray()
-        payload.accept(content)
-
-        if (Json.isGzip(content))
-            content = Json.gzipDecompress(content).asJsonArray
-
-        this.payload.asJsonArray.addAll(content)
+        payload.accept(this.payload.asJsonArray)
     }
 
     override fun serialize(): JsonObject {
