@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
+
 public class JsonArrayConverter {
 
     /**
@@ -23,6 +25,23 @@ public class JsonArrayConverter {
             jsonArray.add( str );
 
         return jsonArray;
+    }
+
+    /**
+     * Converts {@link JsonArray} into array of {@link String}.
+     *
+     * @param array {@link JsonArray} that store strings
+     *
+     * @return new array of {@link String}.
+     */
+    @Contract( pure = true )
+    public static @NotNull String[] toStringArray( @NotNull JsonArray array ) {
+        if (array.isEmpty())
+            return new String[0];
+
+        return Stream.of( array )
+                     .map( JsonArray::getAsString )
+                     .toArray( String[]::new );
     }
 
     public static @NotNull JsonArray fromByteArray( byte[] bytes ) {
