@@ -11,7 +11,7 @@ open class TargetedRequest(
     payload: JsonElement,
     val uuid: UUID?,
     val target: Target
-) : Request(type, payload), RequiredConnection {
+) : Request(type, payload), RequireConnection {
 
     override fun serialize(): JsonObject {
         val uuid =
