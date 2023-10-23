@@ -2,6 +2,7 @@ package me.knighthat.lib.logging;
 
 import me.knighthat.lib.util.ShortUUID;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class Log {
      * @param printStackTrace Print stack trace
      */
     public static void exc( @NotNull String s, @NotNull Throwable t, boolean printStackTrace ) {
-        if (!s.isBlank())
+        if (!s.isEmpty())
             err( s );
 
         if (t.getMessage() != null)
@@ -79,7 +80,7 @@ public class Log {
      * @param printStackTrace Print stack trace
      */
     public static void wexc( @NotNull String s, @NotNull Throwable t, boolean printStackTrace ) {
-        if (!s.isBlank())
+        if (!s.isEmpty())
             warn( s );
 
         if (t.getMessage() != null)
@@ -97,16 +98,18 @@ public class Log {
         err( logger.issueWebsite() );
     }
 
-    public static void logUpdate( @NotNull String object, @NotNull String id, @NotNull String property, @NotNull Object from, @NotNull Object to ) {
+    public static void logUpdate( @NotNull String object, @NotNull String id, @NotNull String property, @Nullable Object from, @Nullable Object to ) {
+        String fromString = from != null ? from.toString() : "null";
+        String toString = to != null ? to.toString() : "null";
         String info = "%s %s changed %s from \"%s\" to \"%s\"";
-        info( String.format( info, object, id, property, from, to ) );
+        info( String.format( info, object, id, property, fromString, toString ) );
     }
 
-    public static void buttonUpdate( @NotNull UUID uuid, @NotNull String property, @NotNull Object from, @NotNull Object to ) {
+    public static void buttonUpdate( @NotNull UUID uuid, @NotNull String property, @Nullable Object from, @Nullable Object to ) {
         logUpdate( "Button", ShortUUID.from( uuid ), property, from, to );
     }
 
-    public static void profileUpdate( @NotNull String displayName, @NotNull String property, @NotNull Object from, @NotNull Object to ) {
+    public static void profileUpdate( @NotNull String displayName, @NotNull String property, @Nullable Object from, @Nullable Object to ) {
         logUpdate( "Profile", displayName, property, from, to );
     }
 
