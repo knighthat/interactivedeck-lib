@@ -4,14 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 public interface SaveAsJson extends JsonSerializable {
 
-    @NotNull
-    String getDisplayName();
+    @NotNull String getDisplayName();
 
-    @NotNull
-    String getFileName();
+    @NotNull String getFileName();
 
-    @NotNull
-    String getFileExtension();
+    @NotNull String getFileExtension();
 
     default @NotNull String getFullName() {return getFileName() + "." + getFileExtension();}
 }
