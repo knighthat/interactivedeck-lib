@@ -15,7 +15,7 @@ abstract class AbstractRequestHandler {
     protected abstract fun handleActionRequest(request: ActionRequest)
 
     fun process(request: Request) {
-        if (request is RequireConnection && !Connection.isConnected())
+        if (request is RequireConnection && Connection.isDisconnected())
             return
 
         when (request.type) {

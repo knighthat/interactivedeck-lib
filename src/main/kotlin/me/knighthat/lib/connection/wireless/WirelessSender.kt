@@ -45,7 +45,7 @@ class WirelessSender(private val outStream: OutputStream) : Thread() {
             } catch (e: InterruptedException) {
 
                 //TODO Needs proper error handling
-                if (!Connection.isConnected())
+                if (Connection.isDisconnected())
                     return
 
                 Log.exc("Thread interrupted!", e, true)
