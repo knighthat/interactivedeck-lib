@@ -1,5 +1,6 @@
 package me.knighthat.lib.logging;
 
+import me.knighthat.lib.connection.Connection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.LinkedBlockingDeque;
@@ -11,6 +12,7 @@ class LogHandler extends Thread {
 
     private final @NotNull LinkedBlockingDeque<LogRecord> LOGS;
     private final @NotNull LogRecord TERMINATOR;
+
     LogHandler() {
         LOGS = new LinkedBlockingDeque<>( 5 );
         TERMINATOR = new LogRecord( () -> {} );
@@ -18,10 +20,13 @@ class LogHandler extends Thread {
 
     void halt() {LOGS.addFirst( TERMINATOR );}
 
-    public void log( @NotNull LogRecord record, long waitTime, TimeUnit timeUnit ) {
+    public void log( @NotNull LogRecord record, long waitTime, @NotNull TimeUnit timeUnit ) {
         try {
             LOGS.offer( record, waitTime, timeUnit );
         } catch (InterruptedException e) {
+            if (Connection.isDisconnected())
+                return;
+
             Log.exc( "Timed out while wait to log", e, true );
             Log.reportBug();
         }
