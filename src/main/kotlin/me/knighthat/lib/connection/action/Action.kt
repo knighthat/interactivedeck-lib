@@ -31,7 +31,7 @@ class Action(
         }
     }
 
-    override fun serialize(): JsonElement {
+    override fun serialize(): JsonObject {
         val json = JsonObject()
 
         json.addProperty("uuid", uuid.toString())
