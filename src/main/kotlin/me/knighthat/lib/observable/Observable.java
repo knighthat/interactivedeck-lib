@@ -32,6 +32,9 @@ public class Observable<T> {
      * @param value new value
      */
     public synchronized void setValue( @Nullable T value ) {
+        if (Objects.equals( this.value, value ))
+            return;
+
         notifyObservers( this.value, value );
         this.value = value;
     }
