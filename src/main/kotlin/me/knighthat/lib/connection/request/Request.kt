@@ -1,7 +1,6 @@
 package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonElement
-import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import me.knighthat.lib.connection.Connection
 import me.knighthat.lib.connection.action.Action
@@ -19,47 +18,22 @@ open class Request(
     companion object {
         @JvmStatic
         @Throws(RequestException::class)
-        fun fromJson(element: JsonElement): Request {
-            if (!element.isJsonObject)
-                throw RequestException("request must be ${JsonObject::class.qualifiedName} not ${element::class.qualifiedName}")
-
-            val json = element.asJsonObject
-
+        fun fromJson(json: JsonObject): Request {
             if (!json.has("type"))
                 throw RequestException("missing type!")
             if (!json.has("content"))
                 throw RequestException("missing content!")
 
             val content = json["content"]
-            val typeStr = json["type"].asString
-            val type = RequestType.valueOf(typeStr)
 
-            var uuid: UUID? = null
-            var target: TargetedRequest.Target? = null
-            if (type == RequestType.ADD ||
-                type == RequestType.REMOVE ||
-                type == RequestType.UPDATE
-            ) {
-                if (!json.has("uuid"))
-                    throw RequestException("missing uuid!")
-                if (!json.has("target"))
-                    throw RequestException("missing target!")
+            return when (val type = RequestType.valueOf(json["type"].asString)) {
+                RequestType.ADD,
+                RequestType.REMOVE,
+                RequestType.UPDATE -> TargetedRequest.fromJson(json, type, content)
 
-                if (json["uuid"] != JsonNull.INSTANCE) {
-                    val uuidStr = json["uuid"].asString
-                    uuid = UUID.fromString(uuidStr)
-                }
+                RequestType.PAIR   -> PairRequest(content)
 
-                val targetStr = json["target"].asString
-                target = TargetedRequest.Target.valueOf(targetStr)
-            }
-
-            return when (type) {
-                RequestType.ADD    -> AddRequest(content, uuid, target!!)
-                RequestType.REMOVE -> RemoveRequest(content, uuid, target!!)
-                RequestType.UPDATE -> UpdateRequest(content, uuid, target!!)
                 RequestType.ACTION -> ActionRequest(Action.fromJson(content))
-                else               -> Request(type, content)
             }
         }
     }

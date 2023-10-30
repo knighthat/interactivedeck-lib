@@ -1,5 +1,6 @@
 package me.knighthat.lib.connection.wireless
 
+import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import me.knighthat.lib.connection.request.AbstractRequestHandler
@@ -18,8 +19,14 @@ class WirelessReceiver(
         Log.deb("Processing: $payload")
 
         try {
-            val json = JsonParser.parseString(payload).asJsonObject
-            handler.process(Request.fromJson(json))
+
+            val json = JsonParser.parseString(payload)
+
+            if (json !is JsonObject)
+                Log.err("request must be ${JsonObject::class.qualifiedName} not ${json::class.qualifiedName}")
+            else
+                handler.process(Request.fromJson(json))
+
         } catch (e: JsonParseException) {
             Log.exc("json parse failed!", e, false)
         }

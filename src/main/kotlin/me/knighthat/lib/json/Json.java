@@ -27,7 +27,7 @@ public class Json {
         }
     }
 
-    public static @NotNull JsonArray gzipCompress( @NotNull JsonElement json ) throws IOException {
+    public static @NotNull JsonArray gzipCompress( @NotNull JsonArray json ) throws IOException {
         String jsonString = GSON.toJson( json );
         byte[] compressedBytes = GZipAlgo.compress( jsonString.getBytes() );
 
