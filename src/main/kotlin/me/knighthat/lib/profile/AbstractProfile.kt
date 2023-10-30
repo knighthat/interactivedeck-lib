@@ -20,20 +20,19 @@ abstract class AbstractProfile<T : InteractiveButton>(
     protected abstract fun updateButtons(buttonJson: JsonElement)
 
     override fun update(json: JsonObject) {
-        if (json.has("displayName"))
-            displayName = json["displayName"].asString
+        for (entry in json.entrySet()) {
 
-        if (json.has("rows"))
-            rows = json["rows"].asInt
+            val value = entry.value
 
-        if (json.has("columns"))
-            columns = json["columns"].asInt
+            when (entry.key) {
 
-        if (json.has("gap"))
-            gap = json["gap"].asInt
-
-        if (json.has("buttons"))
-            updateButtons(json["buttons"])
+                "displayName" -> displayName = value.asString
+                "rows"        -> rows = value.asInt
+                "columns"     -> columns = value.asInt
+                "gap"         -> gap = value.asInt
+                "buttons"     -> updateButtons(value)
+            }
+        }
     }
 
     override fun logUpdate(property: String, oldValue: Any?, newValue: Any?) = Log.profileUpdate(displayName, property, oldValue, newValue)
