@@ -16,9 +16,12 @@ import java.util.zip.GZIPOutputStream;
 public class GZipAlgo {
 
     /**
-     * Verify if byte array has valid length (at least 10 bytes header)<br>
-     * and contains magic numbers (0x1f, 0x8b).<br>
+     * Verifies if the given byte array has valid length
+     * (10 bytes of header and at least 1 byte of null footer)
+     * and contains magic numbers (0x1f, 0x8b) {@link GZIPOutputStream}.
      * Additionally, file must be in compressed state (which is 0x8 - deflate).<br>
+     *
+     * Read more: <a href="https://docs.fileformat.com/compression/gz/">GZip header</a>
      *
      * @param bytes array of bytes to check against
      */
@@ -35,11 +38,13 @@ public class GZipAlgo {
     }
 
     /**
-     * Compress given byte array using GZip algorithm.<br>
-     * If given bytes contains GZip header {@link #isGZip(byte[])}<br>
+     * Compresses the given byte array using GZip algorithm.
+     * If the given byte array is already compressed with GZip,
      * then no more compression will be applied to it.
      *
      * @param raw array of uncompressed bytes to compress
+     *
+     * @see #isGZip(byte[])
      */
     @Contract( pure = true )
     public static byte @NotNull [] compress( byte @NotNull [] raw ) {
@@ -64,8 +69,8 @@ public class GZipAlgo {
         }
 
         /*
-         * Newly compressed bytes has 10 bytes of GZ header
-         * that needs to be removed for accuracy.
+         * A newly compressed byte array has 10 bytes of
+         * GZ header that needs to be removed for accuracy.
          */
         int deflNoHeader = deflatedBytes.length - 10;
         String deb = "Compressed: %s bytes to %s bytes";
@@ -75,11 +80,14 @@ public class GZipAlgo {
     }
 
     /**
-     * Decompress given bytes using GZip algorithm.<br>
-     * If given array doesn't start with GZip header {@link #isGZip(byte[])}<br>
-     * then no decompression will be applied to it.
+     * Decompresses given bytes using GZip algorithm.
+     * If the given byte array is not GZip compress,
+     * then return a new byte array contains the same
+     * values of the provided array.
      *
      * @param deflatedBytes array of compressed bytes to inflate.
+     *
+     * @see #isGZip(byte[])
      */
     @Contract( pure = true )
     public static byte @NotNull [] decompress( byte @NotNull [] deflatedBytes ) {
@@ -104,7 +112,7 @@ public class GZipAlgo {
         }
 
         /*
-         * Uncompressed bytes has 10 bytes of GZ header
+         * A compressed byte array has 10 bytes of GZ header
          * that needs to be removed for accuracy.
          */
         int deflNoHeader = deflatedBytes.length - 10;

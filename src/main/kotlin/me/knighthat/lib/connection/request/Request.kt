@@ -16,6 +16,18 @@ open class Request(
 ) : JsonSerializable {
 
     companion object {
+        /**
+         * Parses request from [JsonObject].
+         * Request must have [type] and [payload].
+         * If request's type is ADD, REMOVE, or UPDATE,
+         * then the conversion will be re-direct to [TargetedRequest.fromJson].
+         *
+         * @param json [JsonObject] represents a valid request
+         *
+         * @return a subclass of [Request]
+         *
+         * @throws RequestException if [type] or [payload] is missing from json string
+         */
         @JvmStatic
         @Throws(RequestException::class)
         fun fromJson(json: JsonObject): Request {
@@ -42,6 +54,12 @@ open class Request(
         Log.deb("Request to ${type.name} is created!")
     }
 
+    /**
+     * Adds itself to sending queue.
+     * But only when connection is established and is connected to a client.
+     *
+     * @see [Connection]
+     */
     fun send() {
         if (Connection.isConnected())
             WirelessSender.send(this)

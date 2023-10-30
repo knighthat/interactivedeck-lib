@@ -1,14 +1,24 @@
 package me.knighthat.lib.observable;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 public class Observable<T> {
 
+    /**
+     * Instantiate an observable object that stores a nullable value.
+     *
+     * @param value initial value (nullable)
+     *
+     * @return new {@link Observable} object contains input value
+     */
+    @Contract( pure = true )
     public static <T> @NotNull Observable<T> of( @Nullable T value ) {return new Observable<>( value );}
 
     private final @NotNull Set<Observer<T>> observers;
@@ -28,6 +38,8 @@ public class Observable<T> {
 
     /**
      * Calls all observers to update to this new value.
+     * If stored value and input value is unchanged,
+     * then no observers will be called into action.
      *
      * @param value new value
      */
