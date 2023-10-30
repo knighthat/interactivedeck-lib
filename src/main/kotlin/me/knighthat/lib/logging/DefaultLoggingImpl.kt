@@ -8,7 +8,7 @@ class DefaultLoggingImpl : Logger {
         return Runnable {
             val format = "[${level.name}] $s"
             if (level == Log.LogLevel.ERROR)
-                println(format)
+                System.err.println(format)
             else
                 println(format)
         }
