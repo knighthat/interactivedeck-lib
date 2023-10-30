@@ -22,7 +22,7 @@ public class GZipAlgo {
      *
      * @param bytes array of bytes to check against
      */
-    public static boolean isGZip( @NotNull byte[] bytes ) {
+    public static boolean isGZip( byte @NotNull [] bytes ) {
         if (bytes.length < 11)
             return false;
 
@@ -42,7 +42,7 @@ public class GZipAlgo {
      * @param raw array of uncompressed bytes to compress
      */
     @Contract( pure = true )
-    public static @NotNull byte[] compress( @NotNull byte[] raw ) {
+    public static byte @NotNull [] compress( byte @NotNull [] raw ) {
         byte[] deflatedBytes = raw;
 
         if (isGZip( raw ))
@@ -82,7 +82,7 @@ public class GZipAlgo {
      * @param deflatedBytes array of compressed bytes to inflate.
      */
     @Contract( pure = true )
-    public static @NotNull byte[] decompress( @NotNull byte[] deflatedBytes ) {
+    public static byte @NotNull [] decompress( byte @NotNull [] deflatedBytes ) {
         byte[] inflatedBytes = new byte[0];
 
         if (!isGZip( deflatedBytes ))
