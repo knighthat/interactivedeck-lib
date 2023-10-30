@@ -1,34 +1,31 @@
 package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import me.knighthat.lib.json.Json
 import java.util.*
 import java.util.function.Consumer
 
-class AddRequest(
-    payload: JsonElement,
-    uuid: UUID?,
-    target: Target
-) : TargetedRequest(RequestType.ADD, JsonArray(), uuid, target) {
+class AddRequest private constructor(
+    uuid: UUID,
+    target: Target,
+) : TargetedRequest(RequestType.ADD, uuid, target, JsonArray()) {
 
-    init {
-        this.payload
-            .asJsonArray
-            .addAll(
-                if (Json.isGzip(payload)) {
-                    val array = payload.asJsonArray
-                    Json.gzipDecompress(array).asJsonArray
-                } else
-                    payload.asJsonArray
-            )
+    override val payload: JsonArray
+        get() {
+            val array = super.payload.asJsonArray
+            return if (Json.isGzip(array))
+                Json.gzipDecompress(array).asJsonArray
+            else
+                array
+        }
+
+    constructor(uuid: UUID, target: Target, payload: JsonArray) : this(uuid, target) {
+        this.payload.addAll(payload)
     }
 
-    constructor(uuid: UUID, payload: JsonArray) : this(payload, uuid, Target.BUTTON)
-
-    constructor(payload: Consumer<JsonArray>) : this(JsonArray(), null, Target.PROFILE) {
-        payload.accept(this.payload.asJsonArray)
+    constructor(uuid: UUID, target: Target, payload: Consumer<JsonArray>) : this(uuid, target) {
+        payload.accept(this.payload)
     }
 
     override fun serialize(): JsonObject {

@@ -13,7 +13,7 @@ import java.util.*
 
 open class Request(
     val type: RequestType,
-    val payload: JsonElement
+    open val payload: JsonElement
 ) : JsonSerializable {
 
     companion object {
