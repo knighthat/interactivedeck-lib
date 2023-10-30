@@ -16,7 +16,13 @@ class GZipAlgoTest {
         ClassLoader loader = GZipAlgoTest.class.getClassLoader();
         try (InputStream inStream = loader.getResourceAsStream( "test.profile" )) {
 
-            toCompress = new String( inStream.readAllBytes() );
+            StringBuilder result = new StringBuilder();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while (( bytesRead = inStream.read( buffer ) ) != -1)
+                result.append( new String( buffer, 0, bytesRead ) );
+
+            toCompress = result.toString();
 
         } catch (IOException e) {
             throw new RuntimeException( e );
