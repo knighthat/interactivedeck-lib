@@ -30,6 +30,6 @@ interface LiveComponent : RealtimeProperty, Identifiable, EventLogging {
                 else                -> throw IllegalArgumentException("Unsupported JSON type " + newValue::class.qualifiedName)
             }
 
-        UpdateRequest(json, uuid, target).send()
+        UpdateRequest(uuid, target, json).send()
     }
 }
