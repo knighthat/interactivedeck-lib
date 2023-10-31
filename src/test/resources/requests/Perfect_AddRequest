@@ -1,0 +1,12 @@
+{
+    "type": "ADD",
+    "content":
+    [
+        "582c19ea-8b1a-4733-b269-052d9270873e",
+        "34f4445e-de7c-4556-95ba-17ab7d588722",
+        "a3857a24-6b97-4e89-b33c-bdf25afe58e5",
+        "8b2b01a0-52d3-430e-9344-044b44479ddf"
+    ],
+    "target": "PROFILE",
+    "uuid": "c0bd9f01-6e2f-4bed-9f48-2f5b0407b415"
+}
