@@ -44,7 +44,7 @@ class Connection private constructor() {
 
     private var status: Observable<Status> = Observable.of(Status.DISCONNECTED)
 
-    enum class Status(hexColor: String, label: String) {
+    enum class Status(val hexColor: String, val label: String) {
 
         DISCONNECTED("#6c757d", "Disconnected"),
         CONNECTED("#70e000", "Connected"),
