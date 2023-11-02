@@ -8,6 +8,7 @@ import me.knighthat.lib.connection.wireless.WirelessSender
 import me.knighthat.lib.exception.RequestException
 import me.knighthat.lib.json.JsonSerializable
 import me.knighthat.lib.logging.Log
+import org.jetbrains.annotations.Contract
 import java.util.*
 
 open class Request(
@@ -19,8 +20,9 @@ open class Request(
         /**
          * Parses request from [JsonObject].
          * Request must have [type] and [payload].
-         * If request's type is ADD, REMOVE, or UPDATE,
+         * If request's type is ADD or REMOVE,
          * then the conversion will be re-direct to [TargetedRequest.fromJson].
+         * UPDATE request will be sent to [UpdateRequest.fromJson]
          *
          * @param json [JsonObject] represents a valid request
          *
@@ -30,23 +32,36 @@ open class Request(
          */
         @JvmStatic
         @Throws(RequestException::class)
+        @Contract(pure = true)
         fun fromJson(json: JsonObject): Request {
-            if (!json.has("type"))
-                throw RequestException("missing type!")
-            if (!json.has("content"))
-                throw RequestException("missing content!")
+            verify(json, "type", "content")
 
             val content = json["content"]
 
-            return when (val type = RequestType.valueOf(json["type"].asString)) {
+            return when (RequestType.valueOf(json["type"].asString)) {
                 RequestType.ADD,
-                RequestType.REMOVE,
-                RequestType.UPDATE -> TargetedRequest.fromJson(json, type, content)
+                RequestType.REMOVE -> TargetedRequest.fromJson(json)
+
+                RequestType.UPDATE -> UpdateRequest.fromJson(json)
 
                 RequestType.PAIR   -> PairRequest(content)
 
                 RequestType.ACTION -> ActionRequest(Action.fromJson(content))
             }
+        }
+
+        /**
+         * Scans through [JsonObject] and checks if it contains provided keys,
+         * if not, [RequestException] will be thrown.
+         *
+         * @throws [RequestException] when a key is not found
+         */
+        fun verify(json: JsonObject, vararg requirements: String) {
+
+            for (req in requirements)
+                if (!json.has(req))
+                    throw RequestException("missing $req!")
+
         }
     }
 
