@@ -2,14 +2,12 @@ package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import me.knighthat.lib.exception.RequestException
-import me.knighthat.lib.json.JsonSerializable
+import org.jetbrains.annotations.Contract
 import java.util.*
 
 open class TargetedRequest(
     type: RequestType,
-    val uuid: UUID,
     val target: Target,
     payload: JsonElement
 ) : Request(type, payload), RequireConnection {
@@ -17,37 +15,30 @@ open class TargetedRequest(
     companion object {
         /**
          * Parses request from [JsonObject].
-         * Request must have [uuid] and [target] in serialized string,
-         * and they are non-null variables.
+         * Request must have [target] in serialized string,
+         * and it is non-null variables.
          *
-         * @param json    [JsonObject] represents a valid request
-         * @param type    type of request
-         * @param payload needed content of the request
+         * @param json [JsonObject] represents a valid request
          *
          * @return a subclass of [TargetedRequest] matches provided **type**
          *
-         * @throws RequestException     if [target] or [uuid] is not present in json
-         * @throws NullPointerException if [target] or [uuid] is null
-         *
-         * @see [Target]
-         * @see [JsonSerializable]
+         * @throws RequestException if [target] is not present in json
          */
         @JvmStatic
         @Throws(RequestException::class)
-        fun fromJson(json: JsonObject, type: RequestType, payload: JsonElement): TargetedRequest {
-            if (!json.has("target"))
-                throw RequestException("missing target!")
-            if (!json.has("uuid"))
-                throw RequestException("missing uuid!")
+        @Contract(pure = true)
+        fun fromJson(json: JsonObject): TargetedRequest {
+            verify(json, "type", "content", "target")
 
-            val uuid = UUID.fromString(json["uuid"].asString)
             val target = Target.valueOf(json["target"].asString)
+            val payload = json["content"]
 
-            return when (type) {
-                RequestType.ADD    -> AddRequest(uuid, target, payload.asJsonArray)
-                RequestType.REMOVE -> RemoveRequest(uuid, target, payload.asJsonArray)
-                RequestType.UPDATE -> UpdateRequest(uuid, target, payload.asJsonObject)
-                else               -> throw RequestException("unknown request type $type")
+            return when (RequestType.valueOf(json["type"].asString)) {
+
+                RequestType.ADD    -> AddRequest(target, payload.asJsonArray)
+                RequestType.REMOVE -> RemoveRequest(target, payload.asJsonArray)
+                else               -> throw RequestException("not targeted request!")
+
             }
         }
     }
@@ -55,7 +46,6 @@ open class TargetedRequest(
     override fun serialize(): JsonObject {
         val json = super.serialize()
         json.addProperty("target", target.name)
-        json.add("uuid", JsonPrimitive(this.uuid.toString()))
 
         return json
     }
