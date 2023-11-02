@@ -1,16 +1,19 @@
 package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonArray
-import java.util.*
+import me.knighthat.lib.component.Identifiable
 import java.util.function.Consumer
 
 class RemoveRequest(
-    uuid: UUID,
     target: Target,
     override val payload: JsonArray
-) : TargetedRequest(RequestType.REMOVE, uuid, target, payload) {
+) : TargetedRequest(RequestType.REMOVE, target, payload) {
 
-    constructor(uuid: UUID, target: Target, payload: Consumer<JsonArray>) : this(uuid, target, JsonArray()) {
+    constructor(target: Target, payload: Consumer<JsonArray>) : this(target, JsonArray()) {
         payload.accept(this.payload)
+    }
+
+    constructor(target: Target, payload: Array<out Identifiable>) : this(target, JsonArray()) {
+        payload.forEach { this.payload.add(it.uuid.toString()) }
     }
 }

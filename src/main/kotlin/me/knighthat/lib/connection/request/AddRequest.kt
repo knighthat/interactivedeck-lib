@@ -2,14 +2,12 @@ package me.knighthat.lib.connection.request
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import me.knighthat.lib.component.ibutton.InteractiveButton
 import me.knighthat.lib.json.Json
-import java.util.*
+import me.knighthat.lib.profile.AbstractProfile
 import java.util.function.Consumer
 
-class AddRequest private constructor(
-    uuid: UUID,
-    target: Target,
-) : TargetedRequest(RequestType.ADD, uuid, target, JsonArray()) {
+class AddRequest private constructor(target: Target) : TargetedRequest(RequestType.ADD, target, JsonArray()) {
 
     override val payload: JsonArray
         get() {
@@ -20,13 +18,24 @@ class AddRequest private constructor(
                 array
         }
 
-    constructor(uuid: UUID, target: Target, payload: JsonArray) : this(uuid, target) {
+    constructor(target: Target, payload: JsonArray) : this(target) {
         this.payload.addAll(payload)
     }
 
-    constructor(uuid: UUID, target: Target, payload: Consumer<JsonArray>) : this(uuid, target) {
+    constructor(target: Target, payload: Consumer<JsonArray>) : this(target) {
         payload.accept(this.payload)
     }
+
+    private constructor(target: Target, payload: Array<out RequestJson>) : this(target) {
+        payload.map(RequestJson::toRequest).forEach(this.payload::add)
+    }
+
+    constructor(payload: Array<out InteractiveButton>)
+            : this(Target.BUTTON, payload.filter { it is RequestJson }.map { it as RequestJson }.toTypedArray())
+
+    constructor(payload: Array<out AbstractProfile<out InteractiveButton>>)
+            : this(Target.PROFILE, payload.filter { it is RequestJson }.map { it as RequestJson }.toTypedArray())
+
 
     override fun serialize(): JsonObject {
         val json = super.serialize()
