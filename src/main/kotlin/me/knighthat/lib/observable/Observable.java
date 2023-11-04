@@ -47,8 +47,9 @@ public class Observable<T> {
         if (Objects.equals( this.value, value ))
             return;
 
-        notifyObservers( this.value, value );
+        T oldValue = this.value;
         this.value = value;
+        notifyObservers( oldValue, value );
     }
 
     /**
